@@ -1,0 +1,59 @@
+.headerContainer {
+    display: flex;
+    height: 200px;
+    width: 100%;
+}
+
+.logoConatiner {
+    margin-left: 80px;
+    margin-top: 20px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 600px;
+}
+
+.logoIcon {
+    width: 80px;
+    height: 80px;
+}
+
+.logoName {
+    padding-left: 20px;
+    font-size: 46px;
+    font-weight: bold;
+
+    background: -webkit-linear-gradient(left,#F8F4A0, #8DE71B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.linkContainer{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: flex-start;
+    align-items: center;
+    width: 700px;
+}
+.register{
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+}
+.login{
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+}
+.aboutUs{
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+}
+.linkR{
+    color: white;
+}
+.linkLogin{
+    color: white;
+}
