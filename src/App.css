@@ -5,12 +5,3 @@
   background: linear-gradient(107.33deg, #0a0c38 0.21%, #117183 100.38%);
   
 }
-.bulb{
-  mix-blend-mode: lighten;
-  position: absolute;
-  padding-left: 800px;
-  top: 151px;
-  width: 700px;
-  height: 450px;
-
-}
