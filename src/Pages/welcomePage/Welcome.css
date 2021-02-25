@@ -1,0 +1,52 @@
+.welcomepage {
+    font-family: Arial;
+    display: flex;
+    justify-self: flex-start;
+  }
+
+  .Para0 {
+    font-weight: bold;
+    font-size: 30px;
+    width: 700px;
+    color: white;
+    padding-left: 80px;
+    text-align: justify
+  }
+  .Para1 {
+    padding-top: 20px;
+    padding-left: 80px;
+    width: 700px;
+    font-size: 15px;
+    color: white;
+    text-align: justify;
+    letter-spacing: 2px;
+  }
+  
+  .Para2 {
+    padding-top: 20px;
+    width: 700px;
+    font-size: 15px;
+    color: white;
+    text-align: justify;
+    padding-left: 80px;
+    letter-spacing: 2px;
+  }
+  .Para3 {
+    padding-top: 20px;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 42px;
+    color: #f5ff82;
+    width: 700px;
+    text-align: justify;
+    padding-left: 80px;
+    letter-spacing: 2px;
+  }
+lightimage{
+  mix-blend-mode: lighten;
+  padding-left: 800px;
+  top: 151px;
+  width: 700px;
+  height: 450px;
+}
