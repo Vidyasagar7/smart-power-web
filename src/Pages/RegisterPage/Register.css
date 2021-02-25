@@ -63,9 +63,25 @@
     left: 140px;
     top: 60px;
 }
-.BulbR{
+.lightimageR{
     mix-blend-mode: lighten;
-    padding-left: 400px;
     width: 700px;
     height: 450px;
+    padding-left: 200px;
+}
+.socialmediacontainerR{
+    display: flex;
+    padding-top: 120px;
+    padding-left: 80px;
+    position: relative;
+}
+.loginButtonR{
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    width: 200px;
+    height: 50px;
+    font-size: 15px;
+    color: white;
+    text-align: center;
+    line-height: 20px;
 }

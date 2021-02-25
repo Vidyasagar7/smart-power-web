@@ -3,7 +3,6 @@ import Header from './Components/Header/Header';
 import Welcome from './Pages/welcomePage/Welcome';
 import Register from './Pages/RegisterPage/Register';
 import Login from './Pages/LoginPage/Login';
-//import Bulb from './images/Bulb.jpg';
 import {BrowserRouter as Router, Route , Switch} from 'react-router-dom';
 
 function App() {
@@ -13,15 +12,9 @@ function App() {
         <Header/>
           <div className="content">
             <Switch>
-              <Route exact path="/">
-                <Welcome/>
-              </Route>
-              <Route path="/register">
-                <Register/>
-              </Route>
-              <Route path="/login">
-                <Login/>
-              </Route>
+              <Route exact path="/" component ={Welcome} />
+              <Route path="/register" component ={Register} />
+              <Route path="/login" component ={Login} />
             </Switch>
             </div>
         </div>

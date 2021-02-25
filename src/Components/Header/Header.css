@@ -36,24 +36,13 @@
     align-items: center;
     width: 700px;
 }
-.register{
+
+.links{
     font-weight: bold;
     font-size: 20px;
     color: white;
 }
-.login{
-    font-weight: bold;
-    font-size: 20px;
-    color: white;
-}
-.aboutUs{
-    font-weight: bold;
-    font-size: 20px;
-    color: white;
-}
-.linkR{
-    color: white;
-}
-.linkLogin{
-    color: white;
+
+.linker{
+    color: rgb(236, 220, 220);
 }

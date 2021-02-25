@@ -25,7 +25,7 @@
     font-size: 24px;
 }
 .emailbtn{
-    width: 200px;
+    width: 300px;
     height: 30px;
 }
 .password{
@@ -40,7 +40,7 @@
     font-size: 24px;
 }
 .passwordbtn{
-    width: 200px;
+    width: 300px;
     height: 30px;
 }
 .submit{
@@ -68,10 +68,36 @@
     width: 230px;
     text-align: center;
 }
-.Bulb{
+.lightimage{
     mix-blend-mode: lighten;
     padding-left: 800px;
     top: 151px;
     width: 700px;
     height: 450px;
+}
+.socialmediacontainer{
+    display: flex;
+    top: 350px;
+    left: 25px;
+    position: relative;
+}
+.Google{
+    padding-left: 20px;
+}
+.Facebook{
+    padding-left: 30px;
+}
+.loginButton{
+    background: #FFFFFF;
+    border-radius: 20px;
+    width: 200px;
+    height: 50px;
+    font-size: 15px;
+    color: #040196;
+    align-items: center;
+    line-height: 20px;
+}
+.image{
+    width: 33px;
+    height: 33px;
 }

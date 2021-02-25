@@ -1,5 +1,5 @@
 .welcomepage {
-    font-family: Arialg;
+    font-family: Arial;
     display: flex;
     justify-self: flex-start;
   }
@@ -19,20 +19,20 @@
     font-size: 15px;
     color: white;
     text-align: justify;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
   }
   
   .Para2 {
-    padding-top: 30px;
+    padding-top: 20px;
     width: 700px;
     font-size: 15px;
     color: white;
     text-align: justify;
     padding-left: 80px;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
   }
   .Para3 {
-    padding-top: 30px;
+    padding-top: 20px;
     font-style: italic;
     font-weight: bold;
     font-size: 20px;
@@ -41,9 +41,9 @@
     width: 700px;
     text-align: justify;
     padding-left: 80px;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
   }
-.Bulb{
+lightimage{
   mix-blend-mode: lighten;
   padding-left: 800px;
   top: 151px;

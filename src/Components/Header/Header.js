@@ -12,20 +12,20 @@ const Header = () => {
           <span className="logoName">Smart Power</span>
         </div>
         <div className="linkContainer">
-            <div className="register">
-              <Link to = '/Register' className = "linkR">
-                Register
+              <div className="links">
+                <Link to = '/Register' className = "linker">
+                  Register
+                  </Link>
+              </div>
+              <div className="links">
+                <Link to ='/Login' className = "linker" >
+                  Login
                 </Link>
+              </div>
+              <div className="links">
+                  About Us
+              </div>
             </div>
-            <div className="login">
-              <Link to ='/Login' className = "linkLogin" >
-                Login
-              </Link>
-            </div>
-            <div className="aboutUs">
-                About Us
-            </div>
-        </div>
       </div>
     </header>
   );
