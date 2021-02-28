@@ -4,52 +4,44 @@
 }
 .loginBox{
     position: absolute;
-    width: 600px;
-    height: 600px;
-    left: 100px;
-    top: 240px;
-    border: 5px solid #F6F8EA;
-    box-sizing: border-box;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-    border-radius: 20px;
+    padding-left: 100px;
+    display: flex;
+    flex-direction: column;
+    
 }
 .email{
-    position: absolute;
     width: 200px;
     height: 33px;
     left: 20px;
-    top: 60px;
+    padding-top: 50px;
     color: white;
     font-style: normal;
     font-weight: bold;
     font-size: 24px;
 }
 .emailbtn{
-    width: 300px;
+    width: 400px;
     height: 30px;
 }
 .password{
-    position: absolute;
     width: 200px;
     height: 43px;
     left: 20px;
-    top: 160px;
+    padding-top: 90px;
     color: white;
     font-style: normal;
     font-weight: bold;
     font-size: 24px;
 }
 .passwordbtn{
-    width: 300px;
+    width: 400px;
     height: 30px;
 }
 .submit{
     display: flex;
     justify-content: space-evenly;
     align-content: flex-start;
-    top: 300px; 
-    position: relative;
-    width: 500px;
+    padding-top: 100px; 
 }
 .loginbtn{
     background-color: #7448BC;
@@ -77,9 +69,7 @@
 }
 .socialmediacontainer{
     display: flex;
-    top: 350px;
-    left: 25px;
-    position: relative;
+    padding-top: 80px;
 }
 .Google{
     padding-left: 20px;

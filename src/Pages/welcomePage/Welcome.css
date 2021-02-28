@@ -1,5 +1,4 @@
 .welcomepage {
-    font-family: Arial;
     display: flex;
     justify-self: flex-start;
   }
@@ -43,7 +42,7 @@
     padding-left: 80px;
     letter-spacing: 2px;
   }
-lightimage{
+.bulb{
   mix-blend-mode: lighten;
   padding-left: 800px;
   top: 151px;

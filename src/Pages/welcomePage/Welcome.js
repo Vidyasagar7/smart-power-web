@@ -1,6 +1,6 @@
 import React from 'react';
 import "./Welcome.css";
-import lightimage from '../../images/Bulb.jpg';
+import Bulb from '../../images/Bulb.jpg';
 const Welcome = () => {
     return(
     <div className="welcomepage">
@@ -19,7 +19,7 @@ const Welcome = () => {
           Join us and let us walk together for a better future..
         </p>
       </div>
-        <img src = {lightimage} className="bulb" alt = ""/>
+        <img src = {Bulb} className="bulb" alt = ""/>
     </div>
     );
 }
