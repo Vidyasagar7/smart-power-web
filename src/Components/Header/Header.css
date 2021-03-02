@@ -41,8 +41,10 @@
     font-weight: bold;
     font-size: 20px;
     color: white;
+    
 }
 
 .linker{
     color: rgb(236, 220, 220);
+    text-decoration: none;
 }

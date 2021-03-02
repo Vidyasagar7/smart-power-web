@@ -1,87 +1,88 @@
-.registercontainer{
-    display: flex;
-    justify-self: flex-start;
+.registercontainer {
+  display: flex;
+  justify-self: flex-start;
 }
-.Registerform{
-    padding-left: 50px;
-    padding-top: 20px;
+.Registerform {
+  padding-left: 50px;
+  padding-top: 20px;
 }
 
-.nameContainer{
-    display: flex;
-    width: 70px;
-    padding-left: 80px;
-    padding-top: 20px;
+.nameContainer {
+  display: flex;
+  width: 70px;
+  padding-left: 80px;
+  padding-top: 20px;
 }
-.fname{
-    font-size: 20px;
-    color: white;
+.fname {
+  font-size: 20px;
+  color: white;
 }
-.fnamebtn{
-    width : 200px;
-    height: 25px;
+.fnamebtn {
+  width: 200px;
+  height: 25px;
 }
-.lname{
-    font-size: 20px;
-    color: white;
-    padding-left: 30px;
+.lname {
+  font-size: 20px;
+  color: white;
+  padding-left: 30px;
 }
-.lnamebtn{
-    width: 200px;
-    height: 25px;
+.lnamebtn {
+  width: 200px;
+  height: 25px;
 }
-.emailR{
-    font-size: 20px;
-    color: white;
-    width: 300px;
-    padding-top: 35px;
-    padding-left: 80px;
+.emailR {
+  font-size: 20px;
+  color: white;
+  width: 300px;
+  padding-top: 35px;
+  padding-left: 80px;
 }
-.emailBtnR{
-    width : 435px;
-    height: 25px;
+.emailBtnR {
+  width: 435px;
+  height: 25px;
 }
-.passwordR{
-    font-size: 20px;
-    color: white;
-    width: 300px;
-    padding-top: 35px;
-    padding-left: 80px;
+.passwordR {
+  font-size: 20px;
+  color: white;
+  width: 300px;
+  padding-top: 35px;
+  padding-left: 80px;
 }
-.pass{
-    height: 25px;
-    width : 435px;
+.pass {
+  height: 25px;
+  width: 435px;
 }
-.registerbtn{
-    background-color: #7448BC;
-    width: 338px;
-    border-radius: 80px;
-    font-size: 30px;
-    height: 50px;
-    color: white;
-    position: relative;
-    left: 140px;
-    top: 60px;
+.registerbtn {
+  background-color: #7448bc;
+  width: 338px;
+  border-radius: 80px;
+  font-size: 30px;
+  height: 50px;
+  color: white;
+  position: relative;
+  left: 140px;
+  top: 60px;
+  border: none;
 }
-.lightimageR{
-    mix-blend-mode: lighten;
-    width: 700px;
-    height: 450px;
-    padding-left: 200px;
+.lightimageR {
+  mix-blend-mode: lighten;
+  width: 700px;
+  height: 450px;
+  padding-left: 200px;
 }
-.socialmediacontainerR{
-    display: flex;
-    padding-top: 120px;
-    padding-left: 80px;
-    position: relative;
+.socialmediacontainerR {
+  display: flex;
+  padding-top: 120px;
+  padding-left: 80px;
 }
-.loginButtonR{
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
-    width: 200px;
-    height: 50px;
-    font-size: 15px;
-    color: white;
-    text-align: center;
-    line-height: 20px;
+.loginButtonR {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  width: 200px;
+  height: 50px;
+  font-size: 15px;
+  color: white;
+  line-height: 35px;
 }

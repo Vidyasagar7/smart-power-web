@@ -1,0 +1,18 @@
+.dashboardContainer{
+    display: flex;
+    justify-self: flex-start;
+}
+.chart{
+    padding-left: 80px;
+    padding-top: 40px;
+    width: 450px;
+    height: 100px;
+}
+.details{   
+    padding-left: 270px;
+    font-size: 20px;
+    color: white;
+}
+.heading{
+    font-weight: bold;
+}
