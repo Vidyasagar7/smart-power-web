@@ -1,10 +1,29 @@
-import React from "react";
+import React ,{useContext,useEffect} from "react";
 import "./Login.css";
 import Bulb from "../../images/Bulb.jpg";
 import Google from "../../icons/google.svg";
 import Facebook from "../../icons/facebook.svg";
-
+import { actions, GlobalStateContext } from "../../Context/GlobalStateContext";
 const Login = () => {
+const [state,dispatch] = useContext(GlobalStateContext);
+  
+  const login = () => {
+    dispatch({
+      type: actions.LOGIN_SUCCESS,
+      payload: "test",
+    });
+  };
+
+  const logout = () => {
+    dispatch({
+      type: actions.LOGOUT,
+    });
+  };
+
+  useEffect(() =>{
+    console.log(`Globalstate: ${JSON.stringify(state)}`);
+  },[state]);
+
   return (
     <div className="loginContainer">
       <div className="loginBox">
@@ -15,10 +34,10 @@ const Login = () => {
         <input type="password" className="textBox" name="password" required />
 
         <div className="submitButton">
-          <button type="submit" className="loginButton">
+          <button type="submit" className="loginButton" onClick = {() => login()}>
             Login
           </button>
-          <span className="forgotPassword">Forgot password?</span>
+          <span className="forgotPassword" onClick = {() => logout()}>Forgot password?</span>
         </div>
         <div className="socialMediaContainer">
           
