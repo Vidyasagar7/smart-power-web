@@ -1,93 +1,95 @@
-.logincontainer{
-    display: flex;
-    justify-self: flex-start;
+.loginContainer {
+  display: flex;
+  justify-self: flex-start;
 }
-.loginBox{
-    position: absolute;
-    padding-left: 100px;
-    display: flex;
-    flex-direction: column;
-    
+.loginBox {
+  padding-left: 200px;
+  display: flex;
+  flex-direction: column;
+  color: white;
 }
-.email{
-    width: 200px;
-    height: 33px;
-    left: 20px;
-    padding-top: 50px;
-    color: white;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 24px;
+.email {
+  width: 200px;
+  height: 33px;
+  padding-top: 50px;
+  color: white;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
 }
-.emailbtn{
-    width: 400px;
-    height: 30px;
+.textBox {
+  width: 250px;
+  height: 30px;
 }
-.password{
-    width: 200px;
-    height: 43px;
-    left: 20px;
-    padding-top: 90px;
-    color: white;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 24px;
+.password {
+  width: 200px;
+  height: 43px;
+  padding-top: 20px;
+  color: white;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
 }
-.passwordbtn{
-    width: 400px;
-    height: 30px;
+.submitButton {
+  display: flex;
+  align-content: flex-start;
+  padding-top: 30px;
+  align-items: center;
 }
-.submit{
-    display: flex;
-    justify-content: space-evenly;
-    align-content: flex-start;
-    padding-top: 100px; 
+.loginButton {
+  background-color: #7448bc;
+  font-weight: bold;
+  width: 200px;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  color: white;
 }
-.loginbtn{
-    background-color: #7448BC;
-    font-weight: bold;
-    width: 120px;
-    height: 60px;
-    border-radius: 20px;
-    font-size: 24px;
-    line-height: 36px;
-    color: white;
+.forgotPassword {
+  font-size: 16px;
+  font-style: italic;
+  color: white;
+  width: 230px;
+  text-align: center;
+  padding-left: 20px;
 }
-.forgotpwd{
-    font-size: 20px;
-    font-style: italic;
-    color: white;
-    width: 230px;
-    text-align: center;
+.lightImage {
+  mix-blend-mode: lighten;
+  padding-left: 250px;
+  top: 150px;
+  width: 530px;
+  height: 350px;
 }
-.lightimage{
-    mix-blend-mode: lighten;
-    padding-left: 800px;
-    top: 151px;
-    width: 700px;
-    height: 450px;
+.socialMediaContainer {
+  display: flex;
+  padding-top: 40px;
+  justify-content: space-between;
 }
-.socialmediacontainer{
-    display: flex;
-    padding-top: 80px;
+.Google {
+  padding-left: 20px;
 }
-.Google{
-    padding-left: 20px;
+.Facebook {
+  padding-left: 30px;
 }
-.Facebook{
-    padding-left: 30px;
+.sociaLoginButton {
+  display: flex;
+  justify-content: space-around;
+  background: #ffffff;
+  border-radius: 20px;
+  border: none;
+  width: 200px;
+  height: 40px;
+  font-size: 15px;
+  color: #040196;
+  align-items: center;
+  line-height: 20px;
 }
-.loginButton{
-    background: #FFFFFF;
-    border-radius: 20px;
-    width: 200px;
-    height: 50px;
-    font-size: 15px;
-    color: #040196;
-    align-items: center;
-    line-height: 20px;
+.image {
+  width: 20px;
+  height: 20px;
 }
-.image{
-    width: 33px;
-    height: 33px;
+.emailPasswordText {
+  font-weight: bold;
+  padding-top: 20px;
 }
