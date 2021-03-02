@@ -5,10 +5,12 @@ import Register from './Pages/RegisterPage/Register';
 import Login from './Pages/LoginPage/Login';
 import {BrowserRouter as Router, Route , Switch} from 'react-router-dom';
 import Dashboard from './Pages/DashboardPage/Dashboard';
+import { GlobalStateContextProvider } from './Context/GlobalStateContext';
 
 
 function App() {
   return (
+  <GlobalStateContextProvider>
     <Router>
       <div className="appBackground">
         <Header/>
@@ -22,6 +24,7 @@ function App() {
             </div>
         </div>
     </Router>
+    </GlobalStateContextProvider>
   );
 }
 
