@@ -3,34 +3,30 @@ import { createContext, useReducer } from "react";
 export const GlobalStateContext = createContext();
 
 const initialState = {
-  isLoggedIn: false,
-  token: null,
-  loginStatus: "",
+  accessToken: null,
 };
 
 export const actions = {
-  LOGIN_SUCCESS: "login_success",
-  LOGOUT: "logout",
+  SET_TOKEN: "SET_TOKEN",
+  REMOVE_TOKEN: "REMOVE_TOKEN",
 };
+
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case actions.LOGIN_SUCCESS:
+    case actions.SET_TOKEN:
       return {
         ...state,
-        isLoggedIn: true,
-        loginStatus: "sucessful login",
-        token: action.payload,
+        accessToken: action.payload,
       };
-    case actions.LOGOUT:
-      return {
-        ...state,
-        isLoggedIn: false,
-        loginStatus: "sucessful logout",
-        token: null,
-      };
+    case actions.REMOVE_TOKEN:
+        return {
+            ...state,
+            initialState
+        };
+
     default:
-        throw new Error();
+      throw new Error();
   }
 };
 
