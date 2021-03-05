@@ -6,6 +6,7 @@ import Dashboard from './Pages/DashboardPage/Dashboard';
 import { GlobalStateContextProvider } from './Context/GlobalStateContext';
 import AuthProvider from './Components/Auth/AuthProvider';
 import ProtectedRoute from './Routes/ProtectedRoute';
+import LinkAccount from './Pages/LinkAccount/LinkAccount';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Switch>
               <Route exact path="/" component ={Welcome} />
               <ProtectedRoute path ="/dashboard" component={Dashboard} />
+              <Route path = "/LinkAccount" component = {LinkAccount} />
             </Switch>
             </div>
         </div>

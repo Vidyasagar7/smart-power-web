@@ -1,19 +1,24 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect,useState } from "react";
 import "./Dashboard.css";
 import Barchart from "./Chart.js";
 import { actions, GlobalStateContext } from "../../Context/GlobalStateContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import AuthConfig from "../../Config/AuthConfig";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Barchartweekly from "./BarchartWeekly";
+import Barchartdaily from "./BarchartDaily";
 
 const getTokenSilentlyOptions = {
   audience: AuthConfig.audience,
   ignoreCache: false,
 };
 
-
 const Dashboard = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  
+
 
   const setAccessToken = useCallback(async () => {
     if (isAuthenticated && !state.acceesToken) {
@@ -43,27 +48,44 @@ const Dashboard = () => {
     contact: "test@gmail.com",
   };
   return (
-    <div className="dashboardContainer">
-      <div className="chart">
-        <Barchart />
-      </div>
-      <div className="details">
-        <div className="userdetails">
-          <p>ICP Number :{data.icpNumber}</p>
-          <p>Location : {data.location}</p>
-          <p>
-            Address : {data.address.line1}
-            <br></br>
-            {data.address.line2}
-            <br></br>
-            {data.address.line3}
-            <br></br>
-            {data.address.line4}
-          </p>
-          <p>Contact : {data.contact}</p>
+    <Router>
+      <div className="dashboardContainer">
+        <div className="chart">
+          <Switch>
+            {<Route path="/dashboard" component={Barchart} />}
+            <Route path="/daily" component={Barchartdaily} />
+            <Route path="/weekly" component={Barchartweekly} />
+          </Switch>
+          <div className="chartTypes">
+            <Link to="/dashboard" className="chartLinks" >
+              Monthly
+            </Link>
+            <Link to="/weekly" className="chartLinks">
+              Weekly
+            </Link>
+            <Link to="/daily" className="chartLinks">
+              Daily
+            </Link>
+          </div>
+        </div>
+        <div className="details">
+          <div className="userdetails">
+            <p>ICP Number :{data.icpNumber}</p>
+            <p>Location : {data.location}</p>
+            <p>
+              Address : {data.address.line1}
+              <br></br>
+              {data.address.line2}
+              <br></br>
+              {data.address.line3}
+              <br></br>
+              {data.address.line4}
+            </p>
+            <p>Contact : {data.contact}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </Router>
   );
 };
 export default Dashboard;

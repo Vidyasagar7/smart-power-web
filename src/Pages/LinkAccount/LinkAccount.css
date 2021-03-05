@@ -1,0 +1,41 @@
+.Container{
+    display: flex;
+}
+.AccountDetails{
+    display: flex;
+    flex-direction: column;
+    padding-left: 90px;
+}
+.lightimage{
+  mix-blend-mode: lighten;
+  padding-left: 250px;
+  top: 150px;
+  width: 530px;
+  height: 350px;
+}
+h3{
+    color: white;
+}
+.paragraph{
+    color: white;
+    font-size: 20px;
+}
+.adharCardText{
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+.textBox{
+    width: 250px;
+    height: 10px;
+    padding-top: 20px;
+}
+.confrimButton{
+    
+    width: 180px;
+    height: 20px;
+    background: #7448BC;
+    border-radius: 20px;
+    font-size: 15px;
+    border: none;
+}

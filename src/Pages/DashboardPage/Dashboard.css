@@ -7,6 +7,17 @@
     padding-top: 40px;
     width: 450px;
     height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+.chartTypes{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 40px;
+}
+.chartLinks{
+    color: white;
+    text-decoration: none;
 }
 .details{   
     padding-left: 270px;
