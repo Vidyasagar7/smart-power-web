@@ -42,8 +42,8 @@ labels: ['12am-8am','8am-4pm','4pm-11:59pm'],
       {
           label: 'Power consumption daily',
           data: [37,40,50],
-          borderColor: ['rgba(255,0,0,0.8)','rgba(0,255,0,0.8)','rgba(0,0,255,0.8)'],
-          backgroundColor: ['rgba(255,0,0,0.8)','rgba(0,255,0,0.8)','rgba(0,0,255,0.8)']
+          borderColor: ['rgba(255,0,0,0.8)','rgba(0,255,0,0.8)','rgba(0,0,255,0.8)',],
+          backgroundColor: ['rgba(255,0,0,0.8)','rgba(0,255,0,0.8)','rgba(0,0,255,0.8)',]
       }
   ]
 }
@@ -98,10 +98,12 @@ const Dashboard = () => {
     <Router>
       <div className="dashboardContainer">
         <div className="chart">
-          {chartState && <Barchart props={chartState} />}
-          <button onClick={()=> setMonthlyData()}>Monthly</button>
-          <button onClick={()=> setWeeklyData()}>Weekly</button>
-          <button onClick={()=> setDailyData()}>Daily</button>
+          {chartState && <Barchart chartState={chartState} />}
+            <div className ="chartLinks">
+              <Link className="link" onClick={()=> setMonthlyData()}>Monthly</Link>
+              <Link className="link" onClick={()=> setWeeklyData()}>Weekly</Link>
+              <Link className="link" onClick={()=> setDailyData()}>Daily</Link>
+            </div>
         </div>
         <div className="details">
           <div className="userdetails">

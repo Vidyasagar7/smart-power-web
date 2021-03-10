@@ -7,7 +7,7 @@ const LinkAccount = () =>{
             <div className = "AccountDetails">
                 <h3>Welcome User,</h3>
                 <p className = "paragraph">You are almost there... Please provide your identification details</p>
-                <span className="adharCardText">Adhar Card ID</span><br></br>
+                <span className="meterText">Meter ID</span><br></br>
                 <input type="text" className="textBox" name="email" required /><br></br>
                 <button className = "confrimButton">Confirm</button>
             </div>

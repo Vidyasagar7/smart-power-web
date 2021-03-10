@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bar } from "react-chartjs-2";
 
-const Barchart = (props) =>{
+const Barchart = ({chartState}) =>{
     var options = {
         scales: {
             xAxes: [{
@@ -17,7 +17,7 @@ const Barchart = (props) =>{
         }
     }
     return(
-        <Bar data={props} options = {options} />
+        <Bar data={chartState} options = {options} />
     );
 }
 
