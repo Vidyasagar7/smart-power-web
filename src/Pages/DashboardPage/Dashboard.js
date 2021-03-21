@@ -5,7 +5,6 @@ import axios from "axios";
 import { actions, GlobalStateContext } from "../../Context/GlobalStateContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import AuthConfig from "../../Config/AuthConfig";
-import { BrowserRouter as Router, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import LinkAccount from "../LinkAccount/LinkAccount";
 
@@ -13,31 +12,7 @@ const getTokenSilentlyOptions = {
   audience: AuthConfig.audience,
   ignoreCache: false,
 };
-const monthlyData = {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-  datasets: [
-    {
-      label: "Power consumption Monthly",
-      data: [100, 48, 63, 82, 29, 70],
-      borderColor: [
-        "rgba(255,0,0,0.8)",
-        "rgba(0,255,0,0.8)",
-        "rgba(0,0,255,0.8)",
-        "rgba(192,192,192,0.8)",
-        "rgba(255,255,0,0.8)",
-        "rgba(255,0,255,0.8)",
-      ],
-      backgroundColor: [
-        "rgba(255,0,0,0.8)",
-        "rgba(0,255,0,0.8)",
-        "rgba(0,0,255,0.8)",
-        "rgba(192,192,192,0.8)",
-        "rgba(255,255,0,0.8)",
-        "rgba(255,0,255,0.8)",
-      ],
-    },
-  ],
-};
+
 const weeklyData = {
   labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
   datasets: [
@@ -96,7 +71,6 @@ const Dashboard = () => {
     }
   }, [dispatch, getAccessTokenSilently, isAuthenticated, state.acceesToken]);
   const [userdetails, setUserDetails] = useState(null);
-  //const [linkedState,setlinkedState] = useState(false);
 
   const loadUserDetails = useCallback(async () => {
     if (isAuthenticated) {
@@ -110,10 +84,7 @@ const Dashboard = () => {
       });
     }
   }, [isAuthenticated, user]);
-  // const userData = {
-  //   userId : 1,
-  //   meterId : "M101"
-  // };
+
   const [meterDetails, setMeterDetails] = useState(null);
   const loadMeterDetails = useCallback(async (meterId) => {
     const url = `http://localhost:3001/api/meterDetails/${meterId}`;
@@ -133,18 +104,69 @@ const Dashboard = () => {
     [loadUserDetails, user.sub]
   );
 
-  //const [yearlySummary, setYearylySummary] = useState({});
-  // const urlYearly =
-  //   `http://localhost:3001/api/meter/${userdetails.meterId}/monthlysummary/:year`;
+  const loadYearlySummary = useCallback(async (meterId) => {
+    let year = new Date().getFullYear()
+    const urlYearly = `http://localhost:3001/api/meter/${meterId}/monthlysummary/${year}`;
+    axios
+      .get(urlYearly)
+      .then((response) => {
+       const summary = response.data.summary;
+       const months = ["jan", "feb" ,"mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+       const getMonthReadings = (summary) =>{
+         return months.map(month => summary[month]);
+       }
+        console.log(response.data.summary);
+        setChartState((chartState)=>({...chartState,
+          labels: months,
+          datasets: [
+            {
+              label: "Power consumption Yearly",
+              data: getMonthReadings(summary),
+              borderColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+                "rgba(102, 44, 0, 1)",
+                "rgba(41, 255, 223, 1)",
+                "rgba(32, 213, 141, 1)",
+                "rgba(127, 125, 21, 1)",
+                "rgba(112, 103, 81, 1)",
+                "rgba(17, 176, 171, 1)",
+              ],
+              backgroundColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+                "rgba(102, 44, 0, 1)",
+                "rgba(41, 255, 223, 1)",
+                "rgba(32, 213, 141, 1)",
+                "rgba(127, 125, 21, 1)",
+                "rgba(112, 103, 81, 1)",
+                "rgba(17, 176, 171, 1)",
+              ],
+            },
+          ],
+        }));
+      });
+  }, []);
 
   // const loadYearlySummary = useCallback(async () => {
-  //   axios.get(urlYearly,{
-  //     params:{
-  //       year: new Date().getFullYear()
-  //     }
-  //   }).then((response) => {
-  //     setYearylySummary(response.data);
-  //   });
+  //   axios
+  //     .get(urlYearly, {
+  //       params: {
+  //         year: new Date().getFullYear(),
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setYearylySummary(response.data);
+  //     });
+
   // }, [urlYearly]);
 
   // const [monthlysummary, setMonthlySummary] = useState({});
@@ -170,16 +192,84 @@ const Dashboard = () => {
   //   });
   // }, [urlDaily]);
 
-  const setMonthlyData = useCallback(() => {
-    setChartState({ ...chartState, ...monthlyData });
+  // const setMonthlyData = useCallback(() => {
+  //   setChartState({ ...chartState, ...monthlyData });
+  // }, [chartState]);
+
+  const setMonthlyData = useCallback((meterId) => {
+    const urlMonthly = `http://localhost:3001/api/meter/${meterId}/summaries`;
+    axios
+      .get(urlMonthly,{
+        params:{
+          fromDate :20210301 ,
+          toDate :20210310,
+        }
+      })
+      .then((response) => {
+        const arr = response.data;
+        const length = arr.length;
+        console.log(arr,length);
+        setChartState((chartState) =>({...chartState ,
+          labels:[] ,
+          datasets: [
+            {
+              label: "Power consumption monthly",
+              data: [],
+              borderColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+              backgroundColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+            },
+          ],
+        }));
+      });
   }, []);
 
-  const setWeeklyData = useCallback(() => {
-    setChartState({ ...chartState, ...weeklyData });
-  }, []);
-
-  const setDailyData = useCallback(() => {
-    setChartState({ ...chartState, ...dailyData });
+  const setDailyData = useCallback((meterId) => {
+    const date = Date.now();
+    const urlDaily = `http://localhost:3001/api/meter/${meterId}/dailySummary/${date}`;
+    axios
+      .get(urlDaily)
+      .then((response) => {
+        console.log(response.data);
+        setChartState((chartState)=>({...chartState,
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Aug","Sep","Oct","Nov","Dec"],
+          datasets: [
+            {
+              label: "Power consumption Yearly",
+              data: [],
+              borderColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+              backgroundColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+            },
+          ],
+        }));
+      });
   }, []);
 
   useEffect(() => {
@@ -190,26 +280,15 @@ const Dashboard = () => {
   useEffect(() => {
     if (userdetails) {
       loadMeterDetails(userdetails.meterId);
-      //loadYearlySummary();
+      loadYearlySummary(userdetails.meterId);
     }
-  }, [loadMeterDetails, userdetails]);
+  }, [loadMeterDetails, userdetails, loadYearlySummary]);
 
-  const data = {
-    icpNumber: "HVB0019878",
-    location: "6.91202105909924 174.753363144016",
-    address: {
-      line1: "A4 Kavya Courts",
-      line2: "West Ponnurangam Road",
-      line3: "Rs puram,",
-      line4: "Coimbatore",
-    },
-    contact: "test@gmail.com",
-  };
   return (
     <div>
       {!userdetails ? (
         <div className="linkAccount">
-          <LinkAccount linkAccount={linkAccount} />
+          <LinkAccount linkAccount={linkAccount} user = {user}  />
         </div>
       ) : (
         meterDetails && (
@@ -217,13 +296,13 @@ const Dashboard = () => {
             <div className="chart">
               {chartState && <Barchart chartState={chartState} />}
               <div className="chartLinks">
-                <Link className="link" onClick={() => setMonthlyData()}>
+                <Link className="link" onClick={() => loadYearlySummary(userdetails.meterId)}>
+                  Yearly
+                </Link>
+                <Link className="link" onClick={() => setMonthlyData(userdetails.meterId)}>
                   Monthly
                 </Link>
-                <Link className="link" onClick={() => setWeeklyData()}>
-                  Weekly
-                </Link>
-                <Link className="link" onClick={() => setDailyData()}>
+                <Link className="link" onClick={() => setDailyData(userdetails.meterId)}>
                   Daily
                 </Link>
               </div>

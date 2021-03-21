@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import "./LinkAccount.css";
 import lightImage from "../../images/Bulb.jpg";
 
-const LinkAccount = ({ linkAccount }) => {
+const LinkAccount = ({ linkAccount , user}) => {
   const [meterId, setMeterId] = useState("");
   return (
     <div className="Container">
       <div className="AccountDetails">
-        <h3>Welcome User,</h3>
+        <h3>Welcome {user.name},</h3>
         <p className="paragraph">
           You are almost there... Please provide your house smart meter serial number
         </p>
