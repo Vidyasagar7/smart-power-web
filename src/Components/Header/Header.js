@@ -28,9 +28,9 @@ const Header = () => {
     });
   }, [loginWithRedirect]);
 
-  useEffect(() => {
-    console.log(`Global state::::: ${JSON.stringify(state)}`);
-  }, [state]);
+  // useEffect(() => {
+  //   console.log(`Global state::::: ${JSON.stringify(state)}`);
+  // }, [state]);
 
   const logoutApp = useCallback(() => {
     dispatch({

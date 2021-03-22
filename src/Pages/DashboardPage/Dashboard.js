@@ -13,51 +13,27 @@ const getTokenSilentlyOptions = {
   ignoreCache: false,
 };
 
-const weeklyData = {
-  labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-  datasets: [
-    {
-      label: "Power consumption weekly",
-      data: [66, 22, 13, 55],
-      borderColor: [
-        "rgba(255,0,0,0.8)",
-        "rgba(0,255,0,0.8)",
-        "rgba(0,0,255,0.8)",
-        "rgba(192,192,192,0.8)",
-      ],
-      backgroundColor: [
-        "rgba(255,0,0,0.8)",
-        "rgba(0,255,0,0.8)",
-        "rgba(0,0,255,0.8)",
-        "rgba(192,192,192,0.8)",
-      ],
-    },
-  ],
+const months = [
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "oct",
+  "nov",
+  "dec",
+];
+const getMonthReadings = (summary) => {
+  return months.map((month) => summary[month]);
 };
 
-const dailyData = {
-  labels: ["12am-8am", "8am-4pm", "4pm-11:59pm"],
-  datasets: [
-    {
-      label: "Power consumption daily",
-      data: [37, 40, 50],
-      borderColor: [
-        "rgba(255,0,0,0.8)",
-        "rgba(0,255,0,0.8)",
-        "rgba(0,0,255,0.8)",
-      ],
-      backgroundColor: [
-        "rgba(255,0,0,0.8)",
-        "rgba(0,255,0,0.8)",
-        "rgba(0,0,255,0.8)",
-      ],
-    },
-  ],
-};
 const Dashboard = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
   const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
-  const [chartState, setChartState] = useState(null);
 
   const setAccessToken = useCallback(async () => {
     if (isAuthenticated && !state.accessToken) {
@@ -81,22 +57,25 @@ const Dashboard = () => {
           dispatch({
             type: actions.SET_USERDETAILS,
             payload: response.data,
-          })
+          });
         }
       });
     }
   }, [dispatch, state.userDetails, user]);
-  
 
-  
+  const loadMeterDetails = useCallback(
+    async (meterId) => {
+      const url = `http://localhost:3001/api/meterDetails/${meterId}`;
+      axios.get(url).then((response) => {
+        dispatch({
+          type: actions.SET_METER_DETAILS,
+          payload: response.data,
+        });
+      });
+    },
+    [dispatch]
+  );
 
-  const [meterDetails, setMeterDetails] = useState(null);
-  const loadMeterDetails = useCallback(async (meterId) => {
-    const url = `http://localhost:3001/api/meterDetails/${meterId}`;
-    axios.get(url).then((response) => {
-      setMeterDetails((state) => ({ ...state, ...response.data }));
-    });
-  }, []);
   const linkAccount = useCallback(
     async (meterId) => {
       const accountDetails = { userId: `${user.sub}`, meterId: meterId };
@@ -109,138 +88,143 @@ const Dashboard = () => {
     [loadUserDetails, user.sub]
   );
 
-  const loadYearlySummary = useCallback(async (meterId) => {
-    let year = new Date().getFullYear()
-    const urlYearly = `http://localhost:3001/api/meter/${meterId}/monthlysummary/${year}`;
-    axios
-      .get(urlYearly)
-      .then((response) => {
-       const summary = response.data.summary;
-       const months = ["jan", "feb" ,"mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
-       const getMonthReadings = (summary) =>{
-         return months.map(month => summary[month]);
-       }
+  const loadYearlySummary = useCallback(async () => {
+    if (state.userDetails) {
+      let year = new Date().getFullYear();
+      const urlYearly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/monthlysummary/${year}`;
+      axios.get(urlYearly).then((response) => {
+        const summary = response.data.summary;
         console.log(response.data.summary);
-        setChartState((chartState)=>({...chartState,
-          labels: months,
-          datasets: [
-            {
-              label: "Power consumption Yearly",
-              data: getMonthReadings(summary),
-              borderColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-                "rgba(102, 44, 0, 1)",
-                "rgba(41, 255, 223, 1)",
-                "rgba(32, 213, 141, 1)",
-                "rgba(127, 125, 21, 1)",
-                "rgba(112, 103, 81, 1)",
-                "rgba(17, 176, 171, 1)",
-              ],
-              backgroundColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-                "rgba(102, 44, 0, 1)",
-                "rgba(41, 255, 223, 1)",
-                "rgba(32, 213, 141, 1)",
-                "rgba(127, 125, 21, 1)",
-                "rgba(112, 103, 81, 1)",
-                "rgba(17, 176, 171, 1)",
+        dispatch({
+          type: actions.SET_CHART_DATA,
+          payload: {
+            labels: months,
+            datasets: [
+              {
+                label: "Power consumption Yearly",
+                data: getMonthReadings(summary),
+                borderColor: [
+                  "rgba(255,0,0,0.8)",
+                  "rgba(0,255,0,0.8)",
+                  "rgba(0,0,255,0.8)",
+                  "rgba(192,192,192,0.8)",
+                  "rgba(255,255,0,0.8)",
+                  "rgba(255,0,255,0.8)",
+                  "rgba(102, 44, 0, 1)",
+                  "rgba(41, 255, 223, 1)",
+                  "rgba(32, 213, 141, 1)",
+                  "rgba(127, 125, 21, 1)",
+                  "rgba(112, 103, 81, 1)",
+                  "rgba(17, 176, 171, 1)",
+                ],
+                backgroundColor: [
+                  "rgba(255,0,0,0.8)",
+                  "rgba(0,255,0,0.8)",
+                  "rgba(0,0,255,0.8)",
+                  "rgba(192,192,192,0.8)",
+                  "rgba(255,255,0,0.8)",
+                  "rgba(255,0,255,0.8)",
+                  "rgba(102, 44, 0, 1)",
+                  "rgba(41, 255, 223, 1)",
+                  "rgba(32, 213, 141, 1)",
+                  "rgba(127, 125, 21, 1)",
+                  "rgba(112, 103, 81, 1)",
+                  "rgba(17, 176, 171, 1)",
+                ],
+              },
+            ],
+          },
+        });
+      });
+    }
+  }, [dispatch, state.userDetails]);
+
+  const setMonthlyData = useCallback(() => {
+    //   let sum = array.reduce(function(a, b){
+    //     return a + b;
+    // }, 0);
+    if (state.userDetails) {
+      const urlMonthly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/summaries`;
+      axios
+        .get(urlMonthly, {
+          params: {
+            fromDate: 20210301,
+            toDate: 20210310,
+          },
+        })
+        .then((response) => {
+          const arr = response.data;
+          const length = arr.length;
+          console.log(arr, length);
+
+          dispatch({
+            type: actions.SET_CHART_DATA,
+            payload: {
+              labels: [],
+              datasets: [
+                {
+                  label: "Power consumption monthly",
+                  data: [],
+                  borderColor: [
+                    "rgba(255,0,0,0.8)",
+                    "rgba(0,255,0,0.8)",
+                    "rgba(0,0,255,0.8)",
+                    "rgba(192,192,192,0.8)",
+                    "rgba(255,255,0,0.8)",
+                    "rgba(255,0,255,0.8)",
+                  ],
+                  backgroundColor: [
+                    "rgba(255,0,0,0.8)",
+                    "rgba(0,255,0,0.8)",
+                    "rgba(0,0,255,0.8)",
+                    "rgba(192,192,192,0.8)",
+                    "rgba(255,255,0,0.8)",
+                    "rgba(255,0,255,0.8)",
+                  ],
+                },
               ],
             },
-          ],
-        }));
-      });
-  }, []);
+          });
+        });
+    }
+  }, [dispatch, state.userDetails]);
 
-  
-  const setMonthlyData = useCallback((meterId) => {
-  //   let sum = array.reduce(function(a, b){
-  //     return a + b;
-  // }, 0);
-    const urlMonthly = `http://localhost:3001/api/meter/${meterId}/summaries`;
-    axios
-      .get(urlMonthly,{
-        params:{
-          fromDate :20210301 ,
-          toDate :20210310,
-        }
-      })
-      .then((response) => {
-        const arr = response.data;
-        const length = arr.length;
-        console.log(arr,length);
-        setChartState((chartState) =>({...chartState ,
-          labels:["today"] ,
-          datasets: [
-            {
-              label: "Power consumption monthly",
-              data: ["25"],
-              borderColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
-              backgroundColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
-            },
-          ],
-        }));
-      
-      });
-    
-  }, []);
-
-  const setDailyData = useCallback((meterId) => {
-    const urlDaily = `http://localhost:3001/api/meter/${meterId}/dailySummary/20210301`;
-    axios
-      .get(urlDaily)
-      .then((response) => {
+  const setDailyData = useCallback(() => {
+    if (state.userDetails) {
+      const urlDaily = `http://localhost:3001/api/meter/${state.userDetails.meterId}/dailySummary/20210301`;
+      axios.get(urlDaily).then((response) => {
         console.log(response.data.readings);
-        setChartState((chartState)=>({...chartState,
-          labels: [],
-          datasets: [
-            {
-              label: "Power consumption Daily",
-              data: [],
-              borderColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
-              backgroundColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
-            },
-          ],
-        }));
+        dispatch({
+          type: actions.SET_CHART_DATA,
+          payload: {
+            labels: [],
+            datasets: [
+              {
+                label: "Power consumption Daily",
+                data: [],
+                borderColor: [
+                  "rgba(255,0,0,0.8)",
+                  "rgba(0,255,0,0.8)",
+                  "rgba(0,0,255,0.8)",
+                  "rgba(192,192,192,0.8)",
+                  "rgba(255,255,0,0.8)",
+                  "rgba(255,0,255,0.8)",
+                ],
+                backgroundColor: [
+                  "rgba(255,0,0,0.8)",
+                  "rgba(0,255,0,0.8)",
+                  "rgba(0,0,255,0.8)",
+                  "rgba(192,192,192,0.8)",
+                  "rgba(255,255,0,0.8)",
+                  "rgba(255,0,255,0.8)",
+                ],
+              },
+            ],
+          },
+        });
       });
-  }, []);
+    }
+  }, [dispatch, state.userDetails]);
 
   useEffect(() => {
     setAccessToken();
@@ -248,47 +232,54 @@ const Dashboard = () => {
   }, [setAccessToken, loadUserDetails]);
 
   useEffect(() => {
-    if (state.userDetails) {
+    // Load meter Details and yearly summary only during initial page load
+    if (state.userDetails && !state.meterDetails) {
       loadMeterDetails(state.userDetails.meterId);
       loadYearlySummary(state.userDetails.meterId);
     }
-  }, [loadMeterDetails, loadYearlySummary, state.userDetails]);
+  }, [
+    dispatch,
+    loadMeterDetails,
+    loadYearlySummary,
+    state.meterDetails,
+    state.userDetails,
+  ]);
 
   return (
     <div>
       {!state.userDetails ? (
         <div className="linkAccount">
-          <LinkAccount linkAccount={linkAccount} user = {user}  />
+          <LinkAccount linkAccount={linkAccount} user={user} />
         </div>
       ) : (
-        meterDetails && (
+        state.chartData && (
           <div className="dashboardContainer">
             <div className="chart">
-              {chartState && <Barchart chartState={chartState} />}
+              {state.meterDetails && <Barchart chartState={state.chartData} />}
               <div className="chartLinks">
-                <Link className="link" onClick={() => loadYearlySummary(state.userDetails.meterId)}>
+                <Link className="link" onClick={loadYearlySummary}>
                   Yearly
                 </Link>
-                <Link className="link" onClick={() => setMonthlyData(state.userDetails.meterId)}>
+                <Link className="link" onClick={setMonthlyData}>
                   Monthly
                 </Link>
-                <Link className="link" onClick={() => setDailyData(state.userDetails.meterId)}>
+                <Link className="link" onClick={setDailyData}>
                   Daily
                 </Link>
               </div>
             </div>
             <div className="details">
               <div className="userdetails">
-                <p>ICP Number :{meterDetails.meterId}</p>
-                <p>Location : {meterDetails.geoLoc}</p>
+                <p>ICP Number :{state.meterDetails.meterId}</p>
+                <p>Location : {state.meterDetails.geoLoc}</p>
                 <p>
-                  Address : {meterDetails.houseNumber}
+                  Address : {state.meterDetails.houseNumber}
                   <br></br>
-                  {meterDetails.street}
+                  {state.meterDetails.street}
                   <br></br>
-                  {meterDetails.state}
+                  {state.meterDetails.state}
                   <br></br>
-                  {meterDetails.pincode}
+                  {state.meterDetails.pincode}
                 </p>
                 <p>User : {user.email}</p>
               </div>
