@@ -4,11 +4,13 @@ export const GlobalStateContext = createContext();
 
 const initialState = {
   accessToken: null,
+  userDetails: null,
 };
 
 export const actions = {
   SET_TOKEN: "SET_TOKEN",
   REMOVE_TOKEN: "REMOVE_TOKEN",
+  SET_USERDETAILS: "SET-USERDETAILS",
 };
 
 
@@ -22,8 +24,13 @@ const reducer = (state, action) => {
     case actions.REMOVE_TOKEN:
         return {
             ...state,
-            initialState
+            initialState,
         };
+    case actions.SET_USERDETAILS:
+      return{
+        ...state,
+        userDetails: action.payload,
+      }
 
     default:
       throw new Error();

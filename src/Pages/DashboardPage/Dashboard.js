@@ -60,7 +60,7 @@ const Dashboard = () => {
   const [chartState, setChartState] = useState(null);
 
   const setAccessToken = useCallback(async () => {
-    if (isAuthenticated && !state.acceesToken) {
+    if (isAuthenticated && !state.accessToken) {
       const token = await getAccessTokenSilently({
         ...getTokenSilentlyOptions,
       });
@@ -69,21 +69,26 @@ const Dashboard = () => {
         payload: token,
       });
     }
-  }, [dispatch, getAccessTokenSilently, isAuthenticated, state.acceesToken]);
-  const [userdetails, setUserDetails] = useState(null);
+  }, [dispatch, getAccessTokenSilently, isAuthenticated, state.accessToken]);
 
   const loadUserDetails = useCallback(async () => {
-    if (isAuthenticated) {
+    if (!state.userDetails) {
       console.log(`User::${JSON.stringify(user)}`);
       console.log(`User Id::${user.sub}`);
       const userDetailsUrl = `http://localhost:3001/api/user/${user.sub}`;
       axios.get(userDetailsUrl).then((response) => {
         if (response.data) {
-          setUserDetails((state) => ({ ...state, ...response.data }));
+          dispatch({
+            type: actions.SET_USERDETAILS,
+            payload: response.data,
+          })
         }
       });
     }
-  }, [isAuthenticated, user]);
+  }, [dispatch, state.userDetails, user]);
+  
+
+  
 
   const [meterDetails, setMeterDetails] = useState(null);
   const loadMeterDetails = useCallback(async (meterId) => {
@@ -156,47 +161,11 @@ const Dashboard = () => {
       });
   }, []);
 
-  // const loadYearlySummary = useCallback(async () => {
-  //   axios
-  //     .get(urlYearly, {
-  //       params: {
-  //         year: new Date().getFullYear(),
-  //       },
-  //     })
-  //     .then((response) => {
-  //       setYearylySummary(response.data);
-  //     });
-
-  // }, [urlYearly]);
-
-  // const [monthlysummary, setMonthlySummary] = useState({});
-  // const urlMonthly = "http://localhost:3001/api/meter/:meterId/summaries";
-
-  // const loadMonthlySummary = useCallback(async () => {
-  //   axios.get(urlMonthly).then((response) => {
-  //     setMonthlySummary(response.data);
-  //   });
-  // }, [urlMonthly]);
-
-  // const [dailySummary, setDailySummary] = useState({});
-  // const urlDaily =
-  //   "http://localhost:3001/api/meter/:meterId/dailySummary/:dateEpochMilli";
-
-  // const loadDailySummary = useCallback(async () => {
-  //   axios.get(urlDaily,{
-  //     params:{
-  //       meterId : userdetails.meterId
-  //     }
-  //   }).then((response) => {
-  //     setDailySummary(response.data);
-  //   });
-  // }, [urlDaily]);
-
-  // const setMonthlyData = useCallback(() => {
-  //   setChartState({ ...chartState, ...monthlyData });
-  // }, [chartState]);
-
+  
   const setMonthlyData = useCallback((meterId) => {
+  //   let sum = array.reduce(function(a, b){
+  //     return a + b;
+  // }, 0);
     const urlMonthly = `http://localhost:3001/api/meter/${meterId}/summaries`;
     axios
       .get(urlMonthly,{
@@ -210,11 +179,11 @@ const Dashboard = () => {
         const length = arr.length;
         console.log(arr,length);
         setChartState((chartState) =>({...chartState ,
-          labels:[] ,
+          labels:["today"] ,
           datasets: [
             {
               label: "Power consumption monthly",
-              data: [],
+              data: ["25"],
               borderColor: [
                 "rgba(255,0,0,0.8)",
                 "rgba(0,255,0,0.8)",
@@ -234,21 +203,22 @@ const Dashboard = () => {
             },
           ],
         }));
+      
       });
+    
   }, []);
 
   const setDailyData = useCallback((meterId) => {
-    const date = Date.now();
-    const urlDaily = `http://localhost:3001/api/meter/${meterId}/dailySummary/${date}`;
+    const urlDaily = `http://localhost:3001/api/meter/${meterId}/dailySummary/20210301`;
     axios
       .get(urlDaily)
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data.readings);
         setChartState((chartState)=>({...chartState,
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Aug","Sep","Oct","Nov","Dec"],
+          labels: [],
           datasets: [
             {
-              label: "Power consumption Yearly",
+              label: "Power consumption Daily",
               data: [],
               borderColor: [
                 "rgba(255,0,0,0.8)",
@@ -278,15 +248,15 @@ const Dashboard = () => {
   }, [setAccessToken, loadUserDetails]);
 
   useEffect(() => {
-    if (userdetails) {
-      loadMeterDetails(userdetails.meterId);
-      loadYearlySummary(userdetails.meterId);
+    if (state.userDetails) {
+      loadMeterDetails(state.userDetails.meterId);
+      loadYearlySummary(state.userDetails.meterId);
     }
-  }, [loadMeterDetails, userdetails, loadYearlySummary]);
+  }, [loadMeterDetails, loadYearlySummary, state.userDetails]);
 
   return (
     <div>
-      {!userdetails ? (
+      {!state.userDetails ? (
         <div className="linkAccount">
           <LinkAccount linkAccount={linkAccount} user = {user}  />
         </div>
@@ -296,13 +266,13 @@ const Dashboard = () => {
             <div className="chart">
               {chartState && <Barchart chartState={chartState} />}
               <div className="chartLinks">
-                <Link className="link" onClick={() => loadYearlySummary(userdetails.meterId)}>
+                <Link className="link" onClick={() => loadYearlySummary(state.userDetails.meterId)}>
                   Yearly
                 </Link>
-                <Link className="link" onClick={() => setMonthlyData(userdetails.meterId)}>
+                <Link className="link" onClick={() => setMonthlyData(state.userDetails.meterId)}>
                   Monthly
                 </Link>
-                <Link className="link" onClick={() => setDailyData(userdetails.meterId)}>
+                <Link className="link" onClick={() => setDailyData(state.userDetails.meterId)}>
                   Daily
                 </Link>
               </div>
