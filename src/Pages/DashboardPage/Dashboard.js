@@ -88,8 +88,15 @@ const Dashboard = () => {
     [loadUserDetails, user.sub]
   );
 
+  const setIsChartDataLoading = useCallback((isLoading) => {
+    dispatch({
+      type: actions.SET_IS_CHART_LOADING,
+      payload: isLoading,
+    });
+  });
   const loadYearlySummary = useCallback(async () => {
     if (state.userDetails) {
+      setIsChartDataLoading(true);
       let year = new Date().getFullYear();
       const urlYearly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/monthlysummary/${year}`;
       axios.get(urlYearly).then((response) => {
@@ -252,10 +259,10 @@ const Dashboard = () => {
           <LinkAccount linkAccount={linkAccount} user={user} />
         </div>
       ) : (
-        state.chartData && (
+        state.meterDetails && (
           <div className="dashboardContainer">
             <div className="chart">
-              {state.meterDetails && <Barchart chartState={state.chartData} />}
+              {state.chartData && <Barchart chartState={state.chartData} />}
               <div className="chartLinks">
                 <Link className="link" onClick={loadYearlySummary}>
                   Yearly

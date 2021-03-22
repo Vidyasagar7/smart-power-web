@@ -5,7 +5,6 @@ export const GlobalStateContext = createContext();
 const initialState = {
   accessToken: null,
   userDetails: null,
-  isUserDataLoaded: false,
   meterDetails: null,
   chartData: null,
   isChartLoading: false,
