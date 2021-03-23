@@ -12,7 +12,6 @@ const getTokenSilentlyOptions = {
   audience: AuthConfig.audience,
   ignoreCache: false,
 };
-
 const months = [
   "jan",
   "feb",
@@ -30,6 +29,9 @@ const months = [
 const getMonthReadings = (summary) => {
   return months.map((month) => summary[month]);
 };
+function getSum(a, b) {
+  return a + b;
+}
 
 const Dashboard = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
@@ -103,7 +105,7 @@ const Dashboard = () => {
         .then((response) => {
           loadUserDetails();
           setIsLoading(false);
-        });
+        })
     },
     [loadUserDetails, setIsLoading, user.sub]
   );
@@ -159,42 +161,28 @@ const Dashboard = () => {
 
   const setMonthlyData = useCallback(async () => {
     if (state.userDetails) {
+
       const urlMonthly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/summaries`;
       const params = {
         fromDate: 20210301,
-        toDate: 20210310,
-      };
+        toDate: 20210330,
+      }
       const response = await fetchData(urlMonthly, params);
-      console.log(response.data);
       dispatch({
         type: actions.SET_CHART_DATA,
         payload: {
-          labels: [],
+          labels: Array(response.data.length).fill().map((x,i)=>i+1),
           datasets: [
             {
-              label: "Monthly Power consumption",
-              data: [],
-              borderColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
-              backgroundColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
+              label: "Power consumption monthly",
+              data: response.data.map(reading =>reading.readings.reduce(getSum,0)),
+              borderColor: "rgba(0,255,0,0.8)",
+              backgroundColor: "rgba(0,255,0,0.8)",
             },
           ],
         },
-      });
-    }
+    });
+   }
   }, [dispatch, fetchData, state.userDetails]);
 
   const setDailyData = useCallback(async () => {
@@ -204,27 +192,13 @@ const Dashboard = () => {
       dispatch({
         type: actions.SET_CHART_DATA,
         payload: {
-          labels: [],
+          labels: Array(response.data.readings.length).fill().map((x,i)=>i+1),
           datasets: [
             {
-              label: "Daily Power consumption",
+              label: "Power consumption Daily(In watts)",
               data: [],
-              borderColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
-              backgroundColor: [
-                "rgba(255,0,0,0.8)",
-                "rgba(0,255,0,0.8)",
-                "rgba(0,0,255,0.8)",
-                "rgba(192,192,192,0.8)",
-                "rgba(255,255,0,0.8)",
-                "rgba(255,0,255,0.8)",
-              ],
+              backgroundColor: "rgb(235, 229, 52)",
+              borderColor: "rgb(235, 229, 52)",
             },
           ],
         },
@@ -255,7 +229,7 @@ const Dashboard = () => {
     <div>
       {!state.isLoading && !state.userDetails ? (
         <div className="linkAccount">
-          <LinkAccount linkAccount={linkAccount} user={user} />
+          <LinkAccount linkAccount={linkAccount} user={user} error={null} />
         </div>
       ) : (
         state.meterDetails && (
@@ -264,7 +238,7 @@ const Dashboard = () => {
               {state.isLoading ? (
                 <Barchart />
               ) : (
-                state.chartData && <Barchart chartState={state.chartData} />
+                state.chartData &&  <div className="wrapper"> <Barchart chartState={state.chartData} /> </div>
               )}
               <div className="chartLinks">
                 <Link className="link" onClick={loadYearlySummary}>

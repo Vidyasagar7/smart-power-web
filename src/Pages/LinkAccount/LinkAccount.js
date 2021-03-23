@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./LinkAccount.css";
 import lightImage from "../../images/Bulb.jpg";
 
-const LinkAccount = ({ linkAccount , user}) => {
+const LinkAccount = ({ linkAccount , user, error}) => {
   const [meterId, setMeterId] = useState("");
   return (
     <div className="Container">
@@ -25,6 +25,8 @@ const LinkAccount = ({ linkAccount , user}) => {
         <button className="confrimButton" onClick={() => linkAccount(meterId)}>
           Confirm
         </button>
+        {error && <div className ="error"> {error} </div>}
+
       </div>
       <img src={lightImage} className="lightimage"></img>
     </div>
