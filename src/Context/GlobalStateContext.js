@@ -7,7 +7,7 @@ const initialState = {
   userDetails: null,
   meterDetails: null,
   chartData: null,
-  isChartLoading: false,
+  isLoading: false,
 };
 
 export const actions = {
@@ -16,7 +16,7 @@ export const actions = {
   SET_USERDETAILS: "SET-USERDETAILS",
   SET_METER_DETAILS: "SET_METER_DETAILS",
   SET_CHART_DATA: "SET_CHART_DATA",
-  SET_IS_CHART_LOADING: "SET_IS_CHART_LOADING",
+  SET_IS_LOADING: "SET_IS_LOADING",
 };
 
 const reducer = (state, action) => {
@@ -48,10 +48,10 @@ const reducer = (state, action) => {
         ...state,
         chartData: action.payload,
       };
-    case actions.SET_IS_CHART_LOADING:
+    case actions.SET_IS_LOADING:
       return {
         ...state,
-        isChartLoading: action.payload,
+        isLoading: action.payload,
       };
     default:
       throw new Error();

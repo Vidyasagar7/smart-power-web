@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import "./Dashboard.css";
 import Barchart from "./Barchart.js";
 import axios from "axios";
@@ -35,6 +35,26 @@ const Dashboard = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
   const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
 
+  const setIsLoading = useCallback(
+    (isLoading) => {
+      dispatch({
+        type: actions.SET_IS_LOADING,
+        payload: isLoading,
+      });
+    },
+    [dispatch]
+  );
+
+  const fetchData = useCallback(
+    async (url, params, token) => {
+      setIsLoading(true);
+      const response = await axios.get(url, { params: params });
+      setIsLoading(false);
+      return response;
+    },
+    [setIsLoading]
+  );
+
   const setAccessToken = useCallback(async () => {
     if (isAuthenticated && !state.accessToken) {
       const token = await getAccessTokenSilently({
@@ -52,186 +72,165 @@ const Dashboard = () => {
       console.log(`User::${JSON.stringify(user)}`);
       console.log(`User Id::${user.sub}`);
       const userDetailsUrl = `http://localhost:3001/api/user/${user.sub}`;
-      axios.get(userDetailsUrl).then((response) => {
-        if (response.data) {
-          dispatch({
-            type: actions.SET_USERDETAILS,
-            payload: response.data,
-          });
-        }
+
+      const response = await fetchData(userDetailsUrl);
+      dispatch({
+        type: actions.SET_USERDETAILS,
+        payload: response.data,
       });
     }
-  }, [dispatch, state.userDetails, user]);
+  }, [dispatch, fetchData, state.userDetails, user]);
 
   const loadMeterDetails = useCallback(
     async (meterId) => {
       const url = `http://localhost:3001/api/meterDetails/${meterId}`;
-      axios.get(url).then((response) => {
-        dispatch({
-          type: actions.SET_METER_DETAILS,
-          payload: response.data,
-        });
+      setIsLoading(true);
+      const response = await fetchData(url);
+      dispatch({
+        type: actions.SET_METER_DETAILS,
+        payload: response.data,
       });
     },
-    [dispatch]
+    [dispatch, fetchData, setIsLoading]
   );
 
   const linkAccount = useCallback(
     async (meterId) => {
       const accountDetails = { userId: `${user.sub}`, meterId: meterId };
+      setIsLoading(true);
       axios
         .post("http://localhost:3001/api/user/linkaccount", accountDetails)
         .then((response) => {
           loadUserDetails();
+          setIsLoading(false);
         });
     },
-    [loadUserDetails, user.sub]
+    [loadUserDetails, setIsLoading, user.sub]
   );
 
-  const setIsChartDataLoading = useCallback((isLoading) => {
-    dispatch({
-      type: actions.SET_IS_CHART_LOADING,
-      payload: isLoading,
-    });
-  });
   const loadYearlySummary = useCallback(async () => {
     if (state.userDetails) {
-      setIsChartDataLoading(true);
       let year = new Date().getFullYear();
       const urlYearly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/monthlysummary/${year}`;
-      axios.get(urlYearly).then((response) => {
-        const summary = response.data.summary;
-        console.log(response.data.summary);
-        dispatch({
-          type: actions.SET_CHART_DATA,
-          payload: {
-            labels: months,
-            datasets: [
-              {
-                label: "Power consumption Yearly",
-                data: getMonthReadings(summary),
-                borderColor: [
-                  "rgba(255,0,0,0.8)",
-                  "rgba(0,255,0,0.8)",
-                  "rgba(0,0,255,0.8)",
-                  "rgba(192,192,192,0.8)",
-                  "rgba(255,255,0,0.8)",
-                  "rgba(255,0,255,0.8)",
-                  "rgba(102, 44, 0, 1)",
-                  "rgba(41, 255, 223, 1)",
-                  "rgba(32, 213, 141, 1)",
-                  "rgba(127, 125, 21, 1)",
-                  "rgba(112, 103, 81, 1)",
-                  "rgba(17, 176, 171, 1)",
-                ],
-                backgroundColor: [
-                  "rgba(255,0,0,0.8)",
-                  "rgba(0,255,0,0.8)",
-                  "rgba(0,0,255,0.8)",
-                  "rgba(192,192,192,0.8)",
-                  "rgba(255,255,0,0.8)",
-                  "rgba(255,0,255,0.8)",
-                  "rgba(102, 44, 0, 1)",
-                  "rgba(41, 255, 223, 1)",
-                  "rgba(32, 213, 141, 1)",
-                  "rgba(127, 125, 21, 1)",
-                  "rgba(112, 103, 81, 1)",
-                  "rgba(17, 176, 171, 1)",
-                ],
-              },
-            ],
-          },
-        });
-      });
-    }
-  }, [dispatch, state.userDetails]);
-
-  const setMonthlyData = useCallback(() => {
-    //   let sum = array.reduce(function(a, b){
-    //     return a + b;
-    // }, 0);
-    if (state.userDetails) {
-      const urlMonthly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/summaries`;
-      axios
-        .get(urlMonthly, {
-          params: {
-            fromDate: 20210301,
-            toDate: 20210310,
-          },
-        })
-        .then((response) => {
-          const arr = response.data;
-          const length = arr.length;
-          console.log(arr, length);
-
-          dispatch({
-            type: actions.SET_CHART_DATA,
-            payload: {
-              labels: [],
-              datasets: [
-                {
-                  label: "Power consumption monthly",
-                  data: [],
-                  borderColor: [
-                    "rgba(255,0,0,0.8)",
-                    "rgba(0,255,0,0.8)",
-                    "rgba(0,0,255,0.8)",
-                    "rgba(192,192,192,0.8)",
-                    "rgba(255,255,0,0.8)",
-                    "rgba(255,0,255,0.8)",
-                  ],
-                  backgroundColor: [
-                    "rgba(255,0,0,0.8)",
-                    "rgba(0,255,0,0.8)",
-                    "rgba(0,0,255,0.8)",
-                    "rgba(192,192,192,0.8)",
-                    "rgba(255,255,0,0.8)",
-                    "rgba(255,0,255,0.8)",
-                  ],
-                },
+      const response = await fetchData(urlYearly);
+      console.log(response.data.summary);
+      dispatch({
+        type: actions.SET_CHART_DATA,
+        payload: {
+          labels: months,
+          datasets: [
+            {
+              label: "Yearly Power consumption",
+              data: getMonthReadings(response.data.summary),
+              borderColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+                "rgba(102, 44, 0, 1)",
+                "rgba(41, 255, 223, 1)",
+                "rgba(32, 213, 141, 1)",
+                "rgba(127, 125, 21, 1)",
+                "rgba(112, 103, 81, 1)",
+                "rgba(17, 176, 171, 1)",
+              ],
+              backgroundColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+                "rgba(102, 44, 0, 1)",
+                "rgba(41, 255, 223, 1)",
+                "rgba(32, 213, 141, 1)",
+                "rgba(127, 125, 21, 1)",
+                "rgba(112, 103, 81, 1)",
+                "rgba(17, 176, 171, 1)",
               ],
             },
-          });
-        });
-    }
-  }, [dispatch, state.userDetails]);
-
-  const setDailyData = useCallback(() => {
-    if (state.userDetails) {
-      const urlDaily = `http://localhost:3001/api/meter/${state.userDetails.meterId}/dailySummary/20210301`;
-      axios.get(urlDaily).then((response) => {
-        console.log(response.data.readings);
-        dispatch({
-          type: actions.SET_CHART_DATA,
-          payload: {
-            labels: [],
-            datasets: [
-              {
-                label: "Power consumption Daily",
-                data: [],
-                borderColor: [
-                  "rgba(255,0,0,0.8)",
-                  "rgba(0,255,0,0.8)",
-                  "rgba(0,0,255,0.8)",
-                  "rgba(192,192,192,0.8)",
-                  "rgba(255,255,0,0.8)",
-                  "rgba(255,0,255,0.8)",
-                ],
-                backgroundColor: [
-                  "rgba(255,0,0,0.8)",
-                  "rgba(0,255,0,0.8)",
-                  "rgba(0,0,255,0.8)",
-                  "rgba(192,192,192,0.8)",
-                  "rgba(255,255,0,0.8)",
-                  "rgba(255,0,255,0.8)",
-                ],
-              },
-            ],
-          },
-        });
+          ],
+        },
       });
     }
-  }, [dispatch, state.userDetails]);
+  }, [dispatch, fetchData, state.userDetails]);
+
+  const setMonthlyData = useCallback(async () => {
+    if (state.userDetails) {
+      const urlMonthly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/summaries`;
+      const params = {
+        fromDate: 20210301,
+        toDate: 20210310,
+      };
+      const response = await fetchData(urlMonthly, params);
+      console.log(response.data);
+      dispatch({
+        type: actions.SET_CHART_DATA,
+        payload: {
+          labels: [],
+          datasets: [
+            {
+              label: "Monthly Power consumption",
+              data: [],
+              borderColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+              backgroundColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+            },
+          ],
+        },
+      });
+    }
+  }, [dispatch, fetchData, state.userDetails]);
+
+  const setDailyData = useCallback(async () => {
+    if (state.userDetails) {
+      const urlDaily = `http://localhost:3001/api/meter/${state.userDetails.meterId}/dailySummary/20210301`;
+      const response = await fetchData(urlDaily);
+      dispatch({
+        type: actions.SET_CHART_DATA,
+        payload: {
+          labels: [],
+          datasets: [
+            {
+              label: "Daily Power consumption",
+              data: [],
+              borderColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+              backgroundColor: [
+                "rgba(255,0,0,0.8)",
+                "rgba(0,255,0,0.8)",
+                "rgba(0,0,255,0.8)",
+                "rgba(192,192,192,0.8)",
+                "rgba(255,255,0,0.8)",
+                "rgba(255,0,255,0.8)",
+              ],
+            },
+          ],
+        },
+      });
+    }
+  }, [dispatch, fetchData, state.userDetails]);
 
   useEffect(() => {
     setAccessToken();
@@ -254,7 +253,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      {!state.userDetails ? (
+      {!state.isLoading && !state.userDetails ? (
         <div className="linkAccount">
           <LinkAccount linkAccount={linkAccount} user={user} />
         </div>
@@ -262,7 +261,11 @@ const Dashboard = () => {
         state.meterDetails && (
           <div className="dashboardContainer">
             <div className="chart">
-              {state.chartData && <Barchart chartState={state.chartData} />}
+              {state.isLoading ? (
+                <Barchart />
+              ) : (
+                state.chartData && <Barchart chartState={state.chartData} />
+              )}
               <div className="chartLinks">
                 <Link className="link" onClick={loadYearlySummary}>
                   Yearly

@@ -20,7 +20,11 @@ const Barchart = ({ chartState }) => {
       ],
     },
   };
-  return <Bar data={chartState} options={options} />;
+  return chartState ? (
+    <Bar data={chartState} options={options} />
+  ) : (
+    <Bar options={options} />
+  );
 };
 
 export default Barchart;
