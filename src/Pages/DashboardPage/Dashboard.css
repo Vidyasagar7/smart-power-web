@@ -4,12 +4,15 @@
 }
 .chart{
     padding-left: 80px;
-    padding-top: 40px;
-    width: 450px;
+    padding-top: 20px;
     height: 100px;
     display: flex;
     flex-direction: column;
 }
+.wrapper {
+    height: 270px !important;
+    width: 540px !important;
+    }
 .chartTypes{
     display: flex;
     justify-content: space-around;
@@ -27,7 +30,7 @@
 }
 
 .details{   
-    padding-left: 270px;
+    padding-left: 240px;
     font-size: 20px;
     color: white;
 }
