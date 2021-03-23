@@ -12,7 +12,6 @@ const getTokenSilentlyOptions = {
   audience: AuthConfig.audience,
   ignoreCache: false,
 };
-
 const months = [
   "jan",
   "feb",
@@ -30,10 +29,14 @@ const months = [
 const getMonthReadings = (summary) => {
   return months.map((month) => summary[month]);
 };
+function getSum(a, b) {
+  return a + b;
+}
 
 const Dashboard = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
   const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
+  const [error, setError] = useState("");
 
   const setAccessToken = useCallback(async () => {
     if (isAuthenticated && !state.accessToken) {
@@ -83,6 +86,9 @@ const Dashboard = () => {
         .post("http://localhost:3001/api/user/linkaccount", accountDetails)
         .then((response) => {
           loadUserDetails();
+        })
+        .catch((e) => {
+          setError("Invalid Details!");
         });
     },
     [loadUserDetails, user.sub]
@@ -147,47 +153,29 @@ const Dashboard = () => {
   }, [dispatch, state.userDetails]);
 
   const setMonthlyData = useCallback(() => {
-    //   let sum = array.reduce(function(a, b){
-    //     return a + b;
-    // }, 0);
     if (state.userDetails) {
+      // let date = new Date(), y = date.setFullYear(14, 0, 1), m = date.getMonth();
+      // let firstDay = new Date(y, m, 1);
+      // let lastDay = new Date(y, m + 1, 0);
       const urlMonthly = `http://localhost:3001/api/meter/${state.userDetails.meterId}/summaries`;
       axios
         .get(urlMonthly, {
           params: {
             fromDate: 20210301,
-            toDate: 20210310,
+            toDate: 20210330,
           },
         })
         .then((response) => {
-          const arr = response.data;
-          const length = arr.length;
-          console.log(arr, length);
-
           dispatch({
             type: actions.SET_CHART_DATA,
             payload: {
-              labels: [],
+              labels: Array(response.data.length).fill().map((x,i)=>i+1),
               datasets: [
                 {
                   label: "Power consumption monthly",
-                  data: [],
-                  borderColor: [
-                    "rgba(255,0,0,0.8)",
-                    "rgba(0,255,0,0.8)",
-                    "rgba(0,0,255,0.8)",
-                    "rgba(192,192,192,0.8)",
-                    "rgba(255,255,0,0.8)",
-                    "rgba(255,0,255,0.8)",
-                  ],
-                  backgroundColor: [
-                    "rgba(255,0,0,0.8)",
-                    "rgba(0,255,0,0.8)",
-                    "rgba(0,0,255,0.8)",
-                    "rgba(192,192,192,0.8)",
-                    "rgba(255,255,0,0.8)",
-                    "rgba(255,0,255,0.8)",
-                  ],
+                  data: response.data.map(reading =>reading.readings.reduce(getSum,0)),
+                  borderColor: "rgba(0,255,0,0.8)",
+                  backgroundColor: "rgba(0,255,0,0.8)",
                 },
               ],
             },
@@ -200,31 +188,19 @@ const Dashboard = () => {
     if (state.userDetails) {
       const urlDaily = `http://localhost:3001/api/meter/${state.userDetails.meterId}/dailySummary/20210301`;
       axios.get(urlDaily).then((response) => {
+        const arr = response.data.readings;
+        const kiloWatt = arr.map((value) => value * 1000);
         console.log(response.data.readings);
         dispatch({
           type: actions.SET_CHART_DATA,
           payload: {
-            labels: [],
+            labels: Array(response.data.readings.length).fill().map((x,i)=>i+1),
             datasets: [
               {
-                label: "Power consumption Daily",
-                data: [],
-                borderColor: [
-                  "rgba(255,0,0,0.8)",
-                  "rgba(0,255,0,0.8)",
-                  "rgba(0,0,255,0.8)",
-                  "rgba(192,192,192,0.8)",
-                  "rgba(255,255,0,0.8)",
-                  "rgba(255,0,255,0.8)",
-                ],
-                backgroundColor: [
-                  "rgba(255,0,0,0.8)",
-                  "rgba(0,255,0,0.8)",
-                  "rgba(0,0,255,0.8)",
-                  "rgba(192,192,192,0.8)",
-                  "rgba(255,255,0,0.8)",
-                  "rgba(255,0,255,0.8)",
-                ],
+                label: "Power consumption Daily(In watts)",
+                data: kiloWatt,
+                backgroundColor: "rgb(235, 229, 52)",
+                borderColor: "rgb(235, 229, 52)",
               },
             ],
           },
@@ -256,13 +232,15 @@ const Dashboard = () => {
     <div>
       {!state.userDetails ? (
         <div className="linkAccount">
-          <LinkAccount linkAccount={linkAccount} user={user} />
+          <LinkAccount linkAccount={linkAccount} user={user} error={error} />
         </div>
       ) : (
         state.meterDetails && (
           <div className="dashboardContainer">
             <div className="chart">
-              {state.chartData && <Barchart chartState={state.chartData} />}
+              <div className="wrapper">
+                {state.chartData && <Barchart chartState={state.chartData} />}
+              </div>
               <div className="chartLinks">
                 <Link className="link" onClick={loadYearlySummary}>
                   Yearly
