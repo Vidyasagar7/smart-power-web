@@ -12,7 +12,7 @@ const initialState = {
 
 export const actions = {
   SET_TOKEN: "SET_TOKEN",
-  REMOVE_TOKEN: "REMOVE_TOKEN",
+  LOGOUT: "LOGOUT",
   SET_USERDETAILS: "SET-USERDETAILS",
   SET_METER_DETAILS: "SET_METER_DETAILS",
   SET_CHART_DATA: "SET_CHART_DATA",
@@ -26,7 +26,7 @@ const reducer = (state, action) => {
         ...state,
         accessToken: action.payload,
       };
-    case actions.REMOVE_TOKEN:
+    case actions.LOGOUT:
       return {
         ...state,
         initialState,
