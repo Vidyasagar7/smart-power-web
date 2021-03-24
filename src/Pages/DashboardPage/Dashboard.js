@@ -136,15 +136,13 @@ const Dashboard = () => {
 
   const loadMeterDetails = useCallback(
     async (meterId) => {
-      const url = `meterDetails/${meterId}`;
-      setIsLoading(true);
-      const response = await fetchData(url);
+      const response = await fetchData(`meterDetails/${meterId}`);
       dispatch({
         type: actions.SET_METER_DETAILS,
         payload: response.data,
       });
     },
-    [dispatch, fetchData, setIsLoading]
+    [dispatch, fetchData]
   );
 
   const linkAccount = useCallback(
@@ -159,9 +157,8 @@ const Dashboard = () => {
   const loadMonthlySummary = useCallback(async () => {
     if (state.userDetails) {
       let year = new Date().getFullYear();
-      const urlYearly = `/meter/${state.userDetails.meterId}/monthlysummary/${year}`;
-      const response = await fetchData(urlYearly);
-      console.log(response.data.summary);
+      const urlMonthlySummary = `/meter/${state.userDetails.meterId}/monthlysummary/${year}`;
+      const response = await fetchData(urlMonthlySummary);
       dispatch({
         type: actions.SET_CHART_DATA,
         payload: {
@@ -180,12 +177,12 @@ const Dashboard = () => {
 
   const getDailyData = useCallback(async () => {
     if (state.userDetails) {
-      const urlMonthly = `/meter/${state.userDetails.meterId}/summaries`;
+      const urlDailySummary = `/meter/${state.userDetails.meterId}/summaries`;
       const params = {
         fromDate: new moment().startOf("month").format(dailyReadingDateFormat),
         toDate: new moment().format(dailyReadingDateFormat),
       };
-      const response = await fetchData(urlMonthly, params);
+      const response = await fetchData(urlDailySummary, params);
       dispatch({
         type: actions.SET_CHART_DATA,
         payload: {
