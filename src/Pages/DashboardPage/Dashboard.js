@@ -107,7 +107,7 @@ const Dashboard = () => {
         return response;
       }
     },
-    [state.accessToken]
+    [setIsLoading, state.accessToken]
   );
 
   const setAccessToken = useCallback(async () => {
