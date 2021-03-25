@@ -8,8 +8,7 @@
 }
 .lightimage{
   mix-blend-mode: lighten;
-  padding-left: 250px;
-  top: 150px;
+  padding-left: 60px;
   width: 530px;
   height: 350px;
 }
@@ -27,15 +26,29 @@ h3{
 }
 .textBox{
     width: 250px;
-    height: 10px;
     padding-top: 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px 20px;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: bold;
 }
 .confrimButton{
     
-    width: 180px;
-    height: 20px;
+    width: 120px;
+    height: 40px;
     background: #7448BC;
     border-radius: 20px;
-    font-size: 15px;
+    font-size: 18px;
+    color: black;
     border: none;
+    cursor: pointer;
+}
+
+.errorMessage{
+    color:palevioletred;
+    font-size: 20px;
+    font-weight: bold;
 }

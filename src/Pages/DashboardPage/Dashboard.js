@@ -36,7 +36,6 @@ function getSum(a, b) {
 const Dashboard = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
   const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
-  const [error, setError] = useState("");
 
   const setAccessToken = useCallback(async () => {
     if (isAuthenticated && !state.accessToken) {
@@ -87,11 +86,14 @@ const Dashboard = () => {
         .then((response) => {
           loadUserDetails();
         })
-        .catch((e) => {
-          setError("Invalid Details!");
+        .catch((error) => {
+          dispatch({
+            type: actions.SET_ERROR_MESSAGE,
+            payload: "Enter valid identification details",
+          })
         });
     },
-    [loadUserDetails, user.sub]
+    [dispatch, loadUserDetails, user.sub]
   );
 
   const setIsChartDataLoading = useCallback((isLoading) => {
@@ -232,7 +234,7 @@ const Dashboard = () => {
     <div>
       {!state.userDetails ? (
         <div className="linkAccount">
-          <LinkAccount linkAccount={linkAccount} user={user} error={error} />
+          <LinkAccount linkAccount={linkAccount} user={user}  />
         </div>
       ) : (
         state.meterDetails && (
