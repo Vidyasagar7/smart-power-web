@@ -148,10 +148,18 @@ const Dashboard = () => {
   const linkAccount = useCallback(
     async (meterId) => {
       const accountDetails = { userId: `${user.sub}`, meterId: meterId };
-      await postData(`/user/linkaccount`, accountDetails);
-      loadUserDetails();
+      try {
+        await postData(`/user/linkaccount`, accountDetails);
+        loadUserDetails();
+      } catch (err) {
+        dispatch({
+          type: actions.SET_ERROR_MESSAGE,
+          payload: err.response.data.error,
+        });
+        setIsLoading(false);
+      }
     },
-    [loadUserDetails, postData, user.sub]
+    [dispatch, loadUserDetails, postData, setIsLoading, user.sub]
   );
 
   const loadMonthlySummary = useCallback(async () => {
