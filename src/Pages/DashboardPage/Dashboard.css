@@ -5,14 +5,20 @@
 .chart{
     padding-left: 80px;
     padding-top: 20px;
-    height: 100px;
     display: flex;
     flex-direction: column;
 }
 .wrapper {
     height: 270px !important;
-    width: 540px !important;
-    }
+    width: 700px !important;
+}
+
+.loader {
+    padding-left: 270px;
+    padding-top: 120px;
+}
+
+
 .chartTypes{
     display: flex;
     justify-content: space-around;

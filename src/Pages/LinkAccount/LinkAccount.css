@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     padding-left: 90px;
+    
 }
 .lightimage{
   mix-blend-mode: lighten;
@@ -17,12 +18,15 @@ h3{
 }
 .paragraph{
     color: white;
-    font-size: 20px;
+    font-size: 16px;
 }
 .meterText{
     color: white;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px;
+}
+.textBoxContainer {
+    padding-top: 5px;
 }
 .textBox{
     width: 250px;
@@ -35,20 +39,25 @@ h3{
     font-size: 20px;
     font-weight: bold;
 }
+.confrimButtonConatiner {
+    padding-top: 20px;
+}
 .confrimButton{
-    
     width: 120px;
     height: 40px;
     background: #7448BC;
     border-radius: 20px;
-    font-size: 18px;
-    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+
     border: none;
     cursor: pointer;
 }
 
 .errorMessage{
-    color:palevioletred;
-    font-size: 20px;
+    padding-top: 10px;
+    color:rgb(235, 120, 250);
+    font-size: 16px;
     font-weight: bold;
 }

@@ -7,17 +7,17 @@ const initialState = {
   userDetails: null,
   meterDetails: null,
   chartData: null,
-  isChartLoading: false,
+  isLoading: false,
   errorMessage: null,
 };
 
 export const actions = {
   SET_TOKEN: "SET_TOKEN",
-  REMOVE_TOKEN: "REMOVE_TOKEN",
+  LOGOUT: "LOGOUT",
   SET_USERDETAILS: "SET-USERDETAILS",
   SET_METER_DETAILS: "SET_METER_DETAILS",
   SET_CHART_DATA: "SET_CHART_DATA",
-  SET_IS_CHART_LOADING: "SET_IS_CHART_LOADING",
+  SET_IS_LOADING: "SET_IS_LOADING",
   SET_ERROR_MESSAGE:"SET_ERROR_MESSAGE",
 };
 
@@ -28,7 +28,7 @@ const reducer = (state, action) => {
         ...state,
         accessToken: action.payload,
       };
-    case actions.REMOVE_TOKEN:
+    case actions.LOGOUT:
       return {
         ...state,
         initialState,
@@ -50,10 +50,10 @@ const reducer = (state, action) => {
         ...state,
         chartData: action.payload,
       };
-    case actions.SET_IS_CHART_LOADING:
+    case actions.SET_IS_LOADING:
       return {
         ...state,
-        isChartLoading: action.payload,
+        isLoading: action.payload,
       };
     case actions.SET_ERROR_MESSAGE:
       return{
