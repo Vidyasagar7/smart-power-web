@@ -66,7 +66,7 @@ const Header = (props) => {
                 </Link>
               </div>
               <div className="links">
-                <Link to="/Login" className="linker" onClick={logoutApp}>
+                <Link to="/" className="linker" onClick={logoutApp}>
                   Logout
                 </Link>
               </div>
@@ -74,12 +74,12 @@ const Header = (props) => {
           ) : (
             <>
               <div className="links">
-                <Link to="/Register" className="linker" onClick={signup}>
+                <Link to="/" className="linker" onClick={signup}>
                   Register
                 </Link>
               </div>
               <div className="links">
-                <Link to="/Login" className="linker" onClick={login}>
+                <Link to="/" className="linker" onClick={login}>
                   Login
                 </Link>
               </div>
