@@ -43,7 +43,7 @@ const Header = (props) => {
     dispatch({
       type: actions.LOGOUT,
     });
-    logout({ client_id: AuthConfig.clientId });
+    logout({ returnTo: `${window.location.origin}${RoutePath.home}` });
   }, [dispatch, logout]);
 
   return (
